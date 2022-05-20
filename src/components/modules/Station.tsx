@@ -16,7 +16,10 @@ export default function Station(props: any) {
     threshold: 1,
   });
 
-  const { data, isLoading, isFetching, isError, error, isFetched } = useQuery(
+  const { data, isLoading, isFetching, isError, error, isFetched } = useQuery<
+    any,
+    any
+  >(
     [props.url],
     async () => {
       const response: AxiosResponse = await axios.post(`/api/getstats`, {
