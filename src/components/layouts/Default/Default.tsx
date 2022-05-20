@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { PropsWithChildren } from "react";
+import { MutableRefObject, PropsWithChildren } from "react";
 import {
   MdDarkMode,
   MdLightMode,
@@ -23,7 +23,7 @@ interface Props {
   title?: string;
 }
 
-export default function LoginLayout({
+export default function DefaultLayout({
   title,
   children,
 }: PropsWithChildren<Props>) {

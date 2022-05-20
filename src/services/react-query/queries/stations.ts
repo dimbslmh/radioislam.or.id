@@ -13,6 +13,39 @@ export const GetStations = () => {
 
   return useQuery(["Stations"], async () => {
     const response: AxiosResponse = await stationsService.getStations();
-    return response.data;
+    const activeStations = response.data.filter((item: any) => {
+      return item.active === true;
+    });
+
+    return activeStations;
+  });
+};
+
+export const GetStationsByProvince = (province: string) => {
+  const stationsService = ApiService.createInstance();
+
+  return useQuery([province], async () => {
+    const response: AxiosResponse = await stationsService.getStations();
+    const activeStations = response.data.filter((item: any) => {
+      return item.active === true && item.province.includes(province);
+    });
+
+    return activeStations;
+  });
+};
+
+export const GetStationsExcluding = (provinces: string[]) => {
+  const stationsService = ApiService.createInstance();
+
+  return useQuery(["Others"], async () => {
+    const response: AxiosResponse = await stationsService.getStations();
+    const activeStations = response.data.filter((item: any) => {
+      return (
+        item.active === true &&
+        !provinces.some(province => item.province.includes(province))
+      );
+    });
+
+    return activeStations;
   });
 };

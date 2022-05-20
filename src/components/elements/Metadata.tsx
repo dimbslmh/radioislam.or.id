@@ -1,20 +1,25 @@
-import { Text } from "@mantine/core";
-import { useSetState } from "@mantine/hooks";
+import axios, { AxiosResponse } from "axios";
+import { useQuery } from "react-query";
 
-export default function Metadata(station: any) {
-  const [state, setState] = useSetState({
-    title: "Nikmat Persaudaraan Karna Allah",
-    artist: "Al-Ustadz Abu Abdillah Muhammad Afifuddin Hafizhahullah Taala",
-  });
+import { Stack, Text } from "@mantine/core";
 
+export default function Metadata({
+  title,
+  artist,
+  streamstatus,
+}: {
+  title: string;
+  artist: string;
+  streamstatus: number;
+}) {
   return (
-    <>
-      <Text weight={500} size="lg" mt="md">
-        {state.title}
+    <Stack spacing={0}>
+      <Text weight={500} size="lg">
+        {title}
       </Text>
       <Text size="sm" color="dimmed">
-        {state.artist}
+        {artist}
       </Text>
-    </>
+    </Stack>
   );
 }

@@ -3,6 +3,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import {
   ColorScheme,
@@ -18,7 +19,7 @@ function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   const [queryClient] = useState(() => new QueryClient());
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    props.colorScheme
+    props.colorScheme,
   );
 
   const toggleColorScheme = (value?: ColorScheme) => {
@@ -107,6 +108,7 @@ function App(props: AppProps & { colorScheme: ColorScheme }) {
             <Hydrate state={pageProps.dehydratedState}>
               <Component {...pageProps} />
             </Hydrate>
+            <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </MantineProvider>
       </ColorSchemeProvider>
