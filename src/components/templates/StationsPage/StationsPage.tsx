@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import PlayerBar from "@element/PlayerBar";
@@ -11,11 +11,12 @@ import {
   SimpleGrid,
   Space
 } from "@mantine/core";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useSetState } from "@mantine/hooks";
 import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
 
 export function StationsPage() {
+  const [state, setState] = useSetState({});
   const [opened, setOpened] = useState(false);
   const { data } = GetStations();
 
@@ -55,7 +56,13 @@ export function StationsPage() {
   }
 
   const items = data.map((item: any, index: number) => (
-    <Station key={index} {...item} index={index} />
+    <Station
+      key={index}
+      {...item}
+      index={index}
+      setState={setState}
+      setOpened={setOpened}
+    />
   ));
 
   return (
@@ -105,9 +112,10 @@ export function StationsPage() {
         position="bottom"
         size={58}
         trapFocus={false}
+        lockScroll={false}
       >
         <Container style={{ paddingLeft: 8, paddingRight: 16 }}>
-          <PlayerBar />
+          <PlayerBar state={state} setOpened={setOpened} />
         </Container>
       </Drawer>
     </DefaultLayout>

@@ -1,26 +1,15 @@
 import axios, { AxiosResponse } from "axios";
-import dynamic from "next/dynamic";
 import { useQuery } from "react-query";
 
+import Metadata from "@element/Metadata";
 import StationHeader from "@element/StationHeader";
 import StationMenu from "@element/StationMenu";
 import StationStats from "@element/StationStats";
-import { Card, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { useIntersection } from "@mantine/hooks";
+import { Card, Group, Stack } from "@mantine/core";
 
-const Metadata = dynamic(() => import("../elements/Metadata"), { ssr: false });
-
-export default function Station(props: any) {
-  const [ref, observedEntry] = useIntersection({
-    root: null,
-    threshold: 1,
-  });
-
-  const { data, isLoading, isFetching, isError, error, isFetched } = useQuery<
-    any,
-    any
-  >(
-    [props.url],
+export default function Station({ setState, setOpened, ...props }: any) {
+  const { data } = useQuery<any, any>(
+    [`https://${props.url}:${props.port}`],
     async () => {
       const response: AxiosResponse = await axios.post(`/api/getstats`, {
         url: `https://${props.url}:${props.port}`,
@@ -30,41 +19,29 @@ export default function Station(props: any) {
       return response.data;
     },
     {
-      enabled: !!observedEntry?.isIntersecting,
       retry: false,
     },
   );
 
-  // if (!data || data.streamstatus === 0) {
-  //   return null;
-  // }
+  if (!data || !data.streamstatus) {
+    return null;
+  }
+
+  const handlePlay = () => {
+    console.log("play", { ...props, ...data });
+    setState({ ...props, ...data });
+    setOpened(true);
+  };
 
   return (
-    <Card shadow="sm" ref={ref}>
-      <Stack justify="space-between">
+    <Card shadow="sm" onClick={handlePlay}>
+      <Stack justify="space-between" sx={{ height: "100%" }}>
         <StationHeader {...props} />
-
-        {isLoading && (
-          <Stack spacing={6}>
-            <Skeleton height={8} radius="xl" />
-            <Skeleton height={8} radius="xl" />
-          </Stack>
-        )}
-
-        {isError && <Text>{error.response.data.message}</Text>}
-
-        {data && data.streamstatus === 0 && <Text>Offline</Text>}
-
-        {data && data.streamstatus !== 0 && (
-          <>
-            <Metadata {...data} />
-
-            <Group position="apart" mb={-8}>
-              <StationStats {...data} />
-              <StationMenu {...data} />
-            </Group>
-          </>
-        )}
+        <Metadata {...data} />
+        <Group position="apart">
+          <StationStats {...data} />
+          {/* <StationMenu {...data} /> */}
+        </Group>
       </Stack>
     </Card>
   );

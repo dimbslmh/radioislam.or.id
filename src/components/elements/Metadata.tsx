@@ -1,12 +1,8 @@
-import axios, { AxiosResponse } from "axios";
-import { useQuery } from "react-query";
-
 import { Stack, Text } from "@mantine/core";
 
 export default function Metadata({
   title,
   artist,
-  streamstatus,
 }: {
   title: string;
   artist: string;
