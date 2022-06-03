@@ -1,12 +1,13 @@
 {
-  "name": "radioapp-pwa",
-  "version": "0.1.0",
+  "name": "radioislam.or.id",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001 & local-ssl-proxy --key radioislam.or.id-key.pem --cert radioislam.or.id.pem --source 443 --target 3001",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 3080",
+    "lint": "next lint",
+    "deploy": "next build && next start -p 3080"
   },
   "dependencies": {
     "@mantine/core": "^4.2.2",
