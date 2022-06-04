@@ -35,9 +35,9 @@ export default async function handler(
         json.listeners = results.data.currentlisteners;
         json.streamstatus = results.data.streamstatus;
       }
-      return res.status(results.status).json(json);
+      return res.status(200).json(json);
     })
     .catch(error => {
-      return res.status(500).json({ message: error.message });
+      return res.status(200).json({ error: { message: error.message } });
     });
 }

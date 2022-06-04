@@ -17,8 +17,8 @@ export default function Station({
   load,
   ...props
 }: any) {
-  const url = props.url.includes("/radio/")
-    ? `https://${props.url}${props.port}`
+  const url = props.url.includes("/radio")
+    ? `https://${props.url}${props.port}/`
     : `https://${props.url}:${props.port}`;
 
   const { data } = useQuery<any, any>(
@@ -36,7 +36,7 @@ export default function Station({
     },
   );
 
-  if (!data || !data.streamstatus) {
+  if (!data || data?.error || !data.streamstatus) {
     return null;
   }
 
