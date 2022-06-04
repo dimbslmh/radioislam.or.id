@@ -39,7 +39,11 @@ export default function Station({
   const handlePlay = () => {
     const stream = `https://${props.url}:${props.port}/stream`;
     if (state.stream === stream) {
-      stop();
+      if (playing) {
+        stop();
+      } else {
+        play();
+      }
     } else {
       setState({ stream, ...props, ...data });
       setOpened(true);
