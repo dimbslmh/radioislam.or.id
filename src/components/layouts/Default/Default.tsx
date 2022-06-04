@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { MutableRefObject, PropsWithChildren } from "react";
+import { MutableRefObject, PropsWithChildren, useState } from "react";
 import {
   MdDarkMode,
   MdLightMode,
@@ -13,6 +13,8 @@ import {
   Group,
   Header,
   Menu,
+  Space,
+  TextInput,
   Title,
   useMantineColorScheme
 } from "@mantine/core";
@@ -21,14 +23,19 @@ import useStyles from "./Default.styles";
 
 interface Props {
   title?: string;
+  handleSearchChange: any;
 }
 
 export default function DefaultLayout({
   title,
   children,
+  handleSearchChange,
 }: PropsWithChildren<Props>) {
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
+  const [query, setQuery] = useState("");
+  const [opened, setOpened] = useState(false);
 
   return (
     <div className={classes.wrapper}>
@@ -37,7 +44,7 @@ export default function DefaultLayout({
       </Head>
       <Header
         fixed
-        height={58}
+        height={opened ? 94 : 58}
         sx={theme => ({
           borderBottom: "none",
           color: colorScheme === "dark" ? theme.white : theme.black,
@@ -49,7 +56,12 @@ export default function DefaultLayout({
       >
         <Container style={{ height: 58 }}>
           <Group sx={{ height: "100%" }} position="apart">
-            <ActionIcon variant="transparent" onClick={() => {}}>
+            <ActionIcon
+              variant="transparent"
+              onClick={() => {
+                setOpened(!opened);
+              }}
+            >
               <MdSearch size={24} />
             </ActionIcon>
             <Title style={{ fontSize: 20 }}>Radio Islam Indonesia</Title>
@@ -60,6 +72,7 @@ export default function DefaultLayout({
                 </ActionIcon>
               }
               closeOnItemClick={false}
+              withinPortal={false}
             >
               <Menu.Item
                 icon={colorScheme === "dark" ? <MdLightMode /> : <MdDarkMode />}
@@ -69,14 +82,23 @@ export default function DefaultLayout({
               </Menu.Item>
             </Menu>
           </Group>
+          {opened && (
+            <Group grow={true}>
+              <TextInput
+                value={query}
+                onChange={event => {
+                  const { value } = event.currentTarget;
+                  setQuery(value);
+                  handleSearchChange(value);
+                }}
+                placeholder="Cari Radio..."
+              />
+            </Group>
+          )}
         </Container>
       </Header>
-      {/* <Navbar width={{ base: 300 }} height={500} p="xs">
-        <div></div>
-            </Navbar> */}
-
-      <Container mt={58}>{children}</Container>
-      {/* <Footer /> */}
+      <Space h={opened ? 94 : 58} />
+      <Container>{children}</Container>
     </div>
   );
 }

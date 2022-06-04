@@ -83,6 +83,19 @@ function App(props: AppProps & { colorScheme: ColorScheme }) {
             Badge: { size: "xl", radius: 0 },
             // ... default props for other components
           }}
+          styles={{
+            ActionIcon: {
+              root: { "&:not(:disabled):active": { transform: "none" } },
+            },
+            Button: {
+              root: {
+                height: 32,
+                minWidth: 80,
+                padding: "0 12px",
+                "&:not(:disabled):active": { transform: "none" },
+              },
+            },
+          }}
         >
           <Global
             styles={theme => ({

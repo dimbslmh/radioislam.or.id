@@ -91,9 +91,8 @@ export default function PlayerBar({
           </Marquee>
         )}
       </div>
-
       {loading ? (
-        <Loader />
+        <Loader size={28} sx={{ flexShrink: 0 }} />
       ) : (
         <ActionIcon
           variant="transparent"
