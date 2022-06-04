@@ -17,11 +17,15 @@ export default function Station({
   load,
   ...props
 }: any) {
+  const url = props.url.includes("/radio/")
+    ? `https://${props.url}${props.port}`
+    : `https://${props.url}:${props.port}`;
+
   const { data } = useQuery<any, any>(
-    [`https://${props.url}:${props.port}`],
+    [url],
     async () => {
       const response: AxiosResponse = await axios.post(`/api/getstats`, {
-        url: `https://${props.url}:${props.port}`,
+        url,
         type: props.type,
         index: props.index,
       });
@@ -37,7 +41,7 @@ export default function Station({
   }
 
   const handlePlay = () => {
-    const stream = `https://${props.url}:${props.port}/stream`;
+    const stream = url + "/stream";
     if (state.stream === stream) {
       if (playing) {
         stop();
