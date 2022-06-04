@@ -3,11 +3,20 @@ import { useQuery } from "react-query";
 
 import Metadata from "@element/Metadata";
 import StationHeader from "@element/StationHeader";
-import StationMenu from "@element/StationMenu";
 import StationStats from "@element/StationStats";
 import { Card, Group, Stack } from "@mantine/core";
 
-export default function Station({ setState, setOpened, ...props }: any) {
+export default function Station({
+  state,
+  setState,
+  setOpened,
+  play,
+  stop,
+  playing,
+  player,
+  load,
+  ...props
+}: any) {
   const { data } = useQuery<any, any>(
     [`https://${props.url}:${props.port}`],
     async () => {
@@ -28,9 +37,14 @@ export default function Station({ setState, setOpened, ...props }: any) {
   }
 
   const handlePlay = () => {
-    console.log("play", { ...props, ...data });
-    setState({ ...props, ...data });
-    setOpened(true);
+    const stream = `https://${props.url}:${props.port}/stream`;
+    if (state.stream === stream) {
+      stop();
+    } else {
+      setState({ stream, ...props, ...data });
+      setOpened(true);
+      play();
+    }
   };
 
   return (

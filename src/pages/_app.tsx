@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { AudioPlayerProvider } from "react-use-audio-player";
 
 import {
   ColorScheme,
@@ -104,12 +105,14 @@ function App(props: AppProps & { colorScheme: ColorScheme }) {
               },
             })}
           />
-          <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
-              <Component {...pageProps} />
-            </Hydrate>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
+          <AudioPlayerProvider>
+            <QueryClientProvider client={queryClient}>
+              <Hydrate state={pageProps.dehydratedState}>
+                <Component {...pageProps} />
+              </Hydrate>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </AudioPlayerProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </>

@@ -1,55 +1,24 @@
-import { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { useState } from "react";
+import { useAudioPlayer } from "react-use-audio-player";
 
 import PlayerBar from "@element/PlayerBar";
 import DefaultLayout from "@layout/Default/Default";
-import {
-  Container,
-  Drawer,
-  Group,
-  Loader,
-  SimpleGrid,
-  Space
-} from "@mantine/core";
-import { useDidUpdate, useSetState } from "@mantine/hooks";
+import { Container, Drawer, SimpleGrid, Space } from "@mantine/core";
+import { useSetState } from "@mantine/hooks";
 import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
 
 export function StationsPage() {
-  const [state, setState] = useSetState({});
+  const [state, setState] = useSetState({ stream: undefined });
   const [opened, setOpened] = useState(false);
   const { data } = GetStations();
 
-  const limit = 10;
-
-  const [count, setCount] = useState({
-    prev: 0,
-    next: limit,
+  const { play, stop, playing, player, load, loading } = useAudioPlayer({
+    src: state.stream,
+    html5: true,
+    format: ["mp3"],
+    autoplay: true,
   });
-  const [hasMore, setHasMore] = useState(true);
-  const [current, setCurrent] = useState([]);
-
-  useDidUpdate(() => {
-    if (data) {
-      setCurrent(data.slice(count.prev, count.next));
-    }
-  }, [data]);
-
-  const getMoreData = () => {
-    if (current.length === data.length) {
-      setHasMore(false);
-      return;
-    }
-    setTimeout(() => {
-      setCurrent(
-        current.concat(data.slice(count.prev + limit, count.next + limit)),
-      );
-    }, 2000);
-    setCount(prevState => ({
-      prev: prevState.prev + limit,
-      next: prevState.next + limit,
-    }));
-  };
 
   if (!data) {
     return <></>;
@@ -60,49 +29,26 @@ export function StationsPage() {
       key={index}
       {...item}
       index={index}
+      state={state}
       setState={setState}
       setOpened={setOpened}
+      player={player}
+      play={play}
+      stop={stop}
+      playing={playing}
+      load={load}
     />
   ));
 
   return (
     <DefaultLayout>
-      {/* <Tabs>
-        <Tabs.Tab label="Jawa">
-          <ProvinceStations province="Jawa Timur" />
-        </Tabs.Tab>
-        <Tabs.Tab label="Kalimantan">
-          <ProvinceStations province="Kalimantan" />
-        </Tabs.Tab>
-        <Tabs.Tab label="Sulawesi">
-          <ProvinceStations province="Sulawesi" />
-        </Tabs.Tab>
-        <Tabs.Tab label="Others">
-          <OtherStations provinces={["Jawa", "Kalimantan", "Sulawesi"]} />
-        </Tabs.Tab>
-      </Tabs> */}
-      {/* <InfiniteScroll
-        dataLength={current.length}
-        next={getMoreData}
-        hasMore={hasMore}
-        loader={
-          <Group position="center" my="xl">
-            <Loader />
-          </Group>
-        }
-      > */}
       <SimpleGrid
         cols={2}
         spacing="md"
         breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
         {items}
-        {/* {current &&
-            current.map((item, index) => (
-              <Station key={index} {...item} index={index} />
-            ))} */}
       </SimpleGrid>
-      {/* </InfiniteScroll> */}
       <Space h={78} />
       <Drawer
         opened={opened}
@@ -115,7 +61,14 @@ export function StationsPage() {
         lockScroll={false}
       >
         <Container style={{ paddingLeft: 8, paddingRight: 16 }}>
-          <PlayerBar state={state} setOpened={setOpened} />
+          <PlayerBar
+            state={state}
+            setOpened={setOpened}
+            play={play}
+            stop={stop}
+            playing={playing}
+            loading={loading}
+          />
         </Container>
       </Drawer>
     </DefaultLayout>

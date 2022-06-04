@@ -1,16 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import Marquee from "react-fast-marquee";
-import { MdStop } from "react-icons/md";
+import { MdPlayArrow, MdStop } from "react-icons/md";
+import { useAudioPlayer } from "react-use-audio-player";
 
 import {
   ActionIcon,
   Avatar,
   Group,
+  Loader,
   Text,
   useMantineColorScheme
 } from "@mantine/core";
 
-export default function PlayerBar({ state, setOpened }: any) {
+export default function PlayerBar({
+  state,
+  stop,
+  play,
+  playing,
+  loading,
+}: any) {
   const [playMarquee, setPlayMarquee] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -27,7 +35,9 @@ export default function PlayerBar({ state, setOpened }: any) {
 
   const { colorScheme } = useMantineColorScheme();
 
-  const metadata = [state.artist, state.title].join(" - ");
+  const metadata = [state.artist, state.title]
+    .filter(string => !!string)
+    .join(" - ");
 
   return (
     <Group style={{ height: 58 }} noWrap spacing={8}>
@@ -82,9 +92,16 @@ export default function PlayerBar({ state, setOpened }: any) {
         )}
       </div>
 
-      <ActionIcon variant="transparent" onClick={() => setOpened(false)}>
-        <MdStop size={24} />
-      </ActionIcon>
+      {loading ? (
+        <Loader />
+      ) : (
+        <ActionIcon
+          variant="transparent"
+          onClick={() => (playing ? stop() : play())}
+        >
+          {playing ? <MdStop size={24} /> : <MdPlayArrow size={24} />}
+        </ActionIcon>
+      )}
     </Group>
   );
 }
