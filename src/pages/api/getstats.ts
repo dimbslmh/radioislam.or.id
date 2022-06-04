@@ -21,7 +21,13 @@ export default async function handler(
       }),
     })
     .then(results => {
-      const json = { title: "", artist: "", listeners: 0, streamstatus: 0 };
+      const json = {
+        title: "",
+        artist: "",
+        listeners: 0,
+        streamstatus: 0,
+        live: false,
+      };
       if (req.body.type === "ic") {
         json.listeners = 0;
       } else {
@@ -31,9 +37,10 @@ export default async function handler(
 
         const songtitle = results.data.songtitle.split(" - ");
         json.title = songtitle[1];
-        json.artist = songtitle[0];
+        json.artist = songtitle[0].replace("LIVE", "").trim();
         json.listeners = results.data.currentlisteners;
         json.streamstatus = results.data.streamstatus;
+        json.live = songtitle[0].startsWith("LIVE");
       }
       return res.status(200).json(json);
     })
