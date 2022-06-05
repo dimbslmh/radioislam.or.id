@@ -70,8 +70,6 @@ export function StationsPage() {
   const { play, stop, playing, player, load, loading } = useAudioPlayer({
     src: state.stream,
     html5: true,
-    format: ["mp3"],
-    autoplay: true,
   });
 
   useEffect(() => {
