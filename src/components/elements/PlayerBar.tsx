@@ -7,6 +7,7 @@ import {
   ActionIcon,
   Avatar,
   Group,
+  Image,
   Loader,
   Text,
   useMantineColorScheme
@@ -41,7 +42,9 @@ export default function PlayerBar({
 
   return (
     <Group style={{ height: 58 }} noWrap spacing={8}>
-      <Avatar src={state.logo} size={42} />
+      <Avatar src={state.logo} size={42}>
+        <Image src="https://apiapk.radioislam.or.id/v2/logo/rii.png" />
+      </Avatar>
       <div
         ref={containerRef}
         style={{ minWidth: "calc(100% - 86px)", overflow: "hidden" }}
