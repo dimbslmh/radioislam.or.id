@@ -44,7 +44,7 @@ export default function DefaultLayout({
       </Head>
       <Header
         fixed
-        height={opened ? 94 : 58}
+        height={opened ? 104 : 58}
         sx={theme => ({
           borderBottom: "none",
           color: colorScheme === "dark" ? theme.white : theme.black,
@@ -97,7 +97,7 @@ export default function DefaultLayout({
           )}
         </Container>
       </Header>
-      <Space h={opened ? 94 : 58} />
+      <Space h={opened ? 104 : 58} />
       <Container>{children}</Container>
     </div>
   );
