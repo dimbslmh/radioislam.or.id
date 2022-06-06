@@ -47,7 +47,11 @@ export default function PlayerBar({
       </Avatar>
       <div
         ref={containerRef}
-        style={{ minWidth: "calc(100% - 82px)", overflow: "hidden" }}
+        style={{
+          minWidth: "calc(100% - 82px)",
+          overflow: "hidden",
+          lineHeight: "12px",
+        }}
       >
         <Text
           ref={textRef}
@@ -55,10 +59,9 @@ export default function PlayerBar({
           style={{
             whiteSpace: "nowrap",
             paddingLeft: 8,
-            display: "inline-block",
+            display: playMarquee ? "block" : "inline-block",
             position: playMarquee ? "absolute" : "relative",
             opacity: playMarquee ? 0 : 1,
-            marginTop: 1,
           }}
         >
           {metadata}
