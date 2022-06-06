@@ -1,21 +1,22 @@
 import { MdOutlineMoreVert } from "react-icons/md";
 
-import { ActionIcon, Group, Menu, Text } from "@mantine/core";
-import { useSetState } from "@mantine/hooks";
+import { ActionIcon, Menu } from "@mantine/core";
 
 export default function StationMenu(station: any) {
-  const [state, setState] = useSetState({
-    live: false,
-  });
-
   return (
     <Menu
       control={
-        <ActionIcon variant="transparent">
+        <ActionIcon
+          variant="transparent"
+          onClick={(event: any) => {
+            event.stopPropagation();
+          }}
+        >
           <MdOutlineMoreVert size={18} />
         </ActionIcon>
       }
-      style={{ marginRight: -8 }}
+      style={{ marginRight: -8, marginTop: -4 }}
+      withinPortal={false}
     >
       <Menu.Item
         onClick={async () => {

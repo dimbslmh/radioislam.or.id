@@ -3,8 +3,17 @@ import { useQuery } from "react-query";
 
 import Metadata from "@element/Metadata";
 import StationHeader from "@element/StationHeader";
+import StationMenu from "@element/StationMenu";
 import StationStats from "@element/StationStats";
-import { Card, Group, Stack } from "@mantine/core";
+import {
+  Avatar,
+  Card,
+  Group,
+  Image,
+  Indicator,
+  Stack,
+  Text
+} from "@mantine/core";
 
 export default function Station({
   state,
@@ -42,29 +51,89 @@ export default function Station({
 
   const handlePlay = () => {
     const stream = url + "/stream";
-    if (state.stream === stream) {
-      if (playing) {
-        stop();
-      } else {
-        play();
-      }
-    } else {
-      setState({ stream, ...props, ...data });
-      setOpened(true);
-      play();
-    }
+    // if (state.stream === stream) {
+    //   if (playing) {
+    //     stop();
+    //   } else {
+    //     play();
+    //   }
+    // } else {
+    setState({ stream, ...props, ...data });
+    setOpened(true);
+    // }
   };
 
   return (
-    <Card shadow="sm" onClick={handlePlay}>
-      <Stack justify="space-between" sx={{ height: "100%" }}>
-        <StationHeader {...props} />
-        <Metadata {...data} />
-        <Group position="apart">
+    <Card
+      p="sm"
+      radius={0}
+      sx={theme => ({
+        borderBottomWidth: 1,
+        borderBottomStyle: "solid",
+        borderBottomColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[8]
+            : theme.colors.dark[0],
+        backgroundColor:
+          theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+      })}
+      onClick={handlePlay}
+    >
+      <Group noWrap={true} align="flex-start" sx={{ height: "100%" }}>
+        <Indicator
+          inline
+          disabled={!props.live}
+          label="LIVE"
+          radius={6}
+          position="bottom-center"
+          withBorder
+          offset={0}
+          styles={{
+            indicator: {
+              borderWidth: 2,
+              paddingLeft: 3,
+              paddingRight: 3,
+              height: "auto",
+              zIndex: 1,
+            },
+          }}
+        >
+          <Avatar
+            src={props.logo}
+            size={64}
+            sx={theme => ({
+              ...(props.live && {
+                boxShadow: `0 0 0 2px ${
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[7]
+                    : theme.white
+                }, 0 0 0 4px ${
+                  theme.colorScheme === "dark"
+                    ? theme.colors.brand[8]
+                    : theme.colors.brand[6]
+                }`,
+              }),
+            })}
+          >
+            <Image src="https://apiapk.radioislam.or.id/v2/logo/rii.png" />
+          </Avatar>
+        </Indicator>
+        <Stack
+          justify="space-between"
+          spacing={0}
+          sx={{ height: "100%", width: "100%" }}
+        >
+          <Group position="apart">
+            <Text style={{ fontSize: 13 }} color="dimmed">
+              {props.name}
+            </Text>
+            <StationMenu {...data} />
+          </Group>
+
+          <Metadata {...data} />
           <StationStats {...data} />
-          {/* <StationMenu {...data} /> */}
-        </Group>
-      </Stack>
+        </Stack>
+      </Group>
     </Card>
   );
 }

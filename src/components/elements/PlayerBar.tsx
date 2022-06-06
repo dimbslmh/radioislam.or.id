@@ -47,7 +47,7 @@ export default function PlayerBar({
       </Avatar>
       <div
         ref={containerRef}
-        style={{ minWidth: "calc(100% - 86px)", overflow: "hidden" }}
+        style={{ minWidth: "calc(100% - 82px)", overflow: "hidden" }}
       >
         <Text
           ref={textRef}
@@ -58,6 +58,7 @@ export default function PlayerBar({
             display: "inline-block",
             position: playMarquee ? "absolute" : "relative",
             opacity: playMarquee ? 0 : 1,
+            marginTop: 1,
           }}
         >
           {metadata}
@@ -94,16 +95,17 @@ export default function PlayerBar({
           </Marquee>
         )}
       </div>
-      {loading ? (
+      {/* {loading ? (
         <Loader size={28} sx={{ flexShrink: 0 }} />
-      ) : (
-        <ActionIcon
-          variant="transparent"
-          onClick={() => (playing ? stop() : play())}
-        >
-          {playing ? <MdStop size={24} /> : <MdPlayArrow size={24} />}
-        </ActionIcon>
-      )}
+      ) : ( */}
+      <ActionIcon
+        variant="transparent"
+        onClick={() => (playing ? stop() : play())}
+        sx={{ marginRight: -3 }}
+      >
+        {playing ? <MdStop size={24} /> : <MdPlayArrow size={24} />}
+      </ActionIcon>
+      {/* )} */}
     </Group>
   );
 }

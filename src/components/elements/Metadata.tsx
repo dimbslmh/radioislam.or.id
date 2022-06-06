@@ -1,20 +1,15 @@
 import { Stack, Text } from "@mantine/core";
 
 export default function Metadata({
-  title,
-  artist,
+  songtitle,
 }: {
-  title: string;
-  artist: string;
+  songtitle: string;
   streamstatus: number;
 }) {
   return (
     <Stack spacing={0}>
-      <Text weight={500} size="lg">
-        {title}
-      </Text>
-      <Text size="sm" color="dimmed">
-        {artist}
+      <Text weight={500} size="sm" sx={{ lineHeight: 1.25, marginBottom: 4 }}>
+        {songtitle}
       </Text>
     </Stack>
   );

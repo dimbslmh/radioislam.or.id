@@ -50,8 +50,8 @@ export default function DefaultLayout({
           color: colorScheme === "dark" ? theme.white : theme.black,
           alignItems: "center",
           justifyContent: "center",
-          // backgroundColor:
-          //   colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.red,
+          backgroundColor:
+            colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
         })}
       >
         <Container style={{ height: 58 }}>
@@ -73,6 +73,7 @@ export default function DefaultLayout({
               }
               closeOnItemClick={false}
               withinPortal={false}
+              sx={{ marginRight: -8 }}
             >
               <Menu.Item
                 icon={colorScheme === "dark" ? <MdLightMode /> : <MdDarkMode />}
@@ -85,6 +86,7 @@ export default function DefaultLayout({
           {opened && (
             <Group grow={true}>
               <TextInput
+                autoFocus
                 value={query}
                 onChange={event => {
                   const { value } = event.currentTarget;
@@ -98,7 +100,7 @@ export default function DefaultLayout({
         </Container>
       </Header>
       <Space h={opened ? 104 : 58} />
-      <Container>{children}</Container>
+      <Container p={0}>{children}</Container>
     </div>
   );
 }

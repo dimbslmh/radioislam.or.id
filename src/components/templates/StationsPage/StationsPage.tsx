@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
 
 import PlayerBar from "@element/PlayerBar";
@@ -12,7 +12,7 @@ import {
   Stack,
   Title
 } from "@mantine/core";
-import { useSetState } from "@mantine/hooks";
+import { useDebouncedValue, useDidUpdate, useSetState } from "@mantine/hooks";
 import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
 
@@ -48,30 +48,38 @@ export function StationsPage() {
   const [state, setState] = useSetState({ stream: undefined });
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
+  const [debounced] = useDebouncedValue(search, 200);
   const [sortedData, setSortedData] = useState([]);
   const [sortBy, setSortBy] = useState<keyof any>("");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const { data } = GetStations();
 
+  useDidUpdate(() => {
+    const result = sortData(data, {
+      sortBy,
+      reversed: reverseSortDirection,
+      search: debounced,
+    });
+    setSortedData(result);
+  }, [debounced]);
+
   const setSorting = (field: keyof any) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
+    const result = sortData(data, { sortBy: field, reversed, search });
+    setSortedData(result);
   };
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value }),
-    );
   };
 
-  const { play, stop, playing, player, load, loading } = useAudioPlayer({
-    src: state.stream,
-    html5: true,
-    format: ["mp3", "aac"],
-  });
+  // const { play, stop, playing, player, load, loading } = useAudioPlayer({
+  //   src: state.stream,
+  //   html5: true,
+  //   format: ["mp3", "aac"],
+  // });
 
   useEffect(() => {
     if (data) {
@@ -79,9 +87,12 @@ export function StationsPage() {
     }
   }, [data]);
 
-  if (!data) {
-    return <></>;
-  }
+  useDidUpdate(() => {
+    if (state) {
+      console.log("PLAY!");
+      // play();
+    }
+  }, [state]);
 
   const items = sortedData.map((item: any, index: number) => (
     <Station
@@ -91,13 +102,17 @@ export function StationsPage() {
       state={state}
       setState={setState}
       setOpened={setOpened}
-      player={player}
-      play={play}
-      stop={stop}
-      playing={playing}
-      load={load}
+      // player={player}
+      // play={play}
+      // stop={stop}
+      // playing={playing}
+      // load={load}
     />
   ));
+
+  if (!data) {
+    return <></>;
+  }
 
   return (
     <DefaultLayout handleSearchChange={handleSearchChange}>
@@ -124,7 +139,7 @@ export function StationsPage() {
       </Stack> */}
       <SimpleGrid
         cols={2}
-        spacing="md"
+        spacing={1}
         breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
         {items}
@@ -140,14 +155,14 @@ export function StationsPage() {
         trapFocus={false}
         lockScroll={false}
       >
-        <Container style={{ paddingLeft: 8, paddingRight: 16 }}>
+        <Container px="md">
           <PlayerBar
             state={state}
             setOpened={setOpened}
-            play={play}
-            stop={stop}
-            playing={playing}
-            loading={loading}
+            // play={play}
+            // stop={stop}
+            // playing={playing}
+            // loading={loading}
           />
         </Container>
       </Drawer>
