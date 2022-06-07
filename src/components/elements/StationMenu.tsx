@@ -8,6 +8,7 @@ export default function StationMenu(station: any) {
       control={
         <ActionIcon
           variant="transparent"
+          style={{ marginRight: -13, marginTop: -4 }}
           onClick={(event: any) => {
             event.stopPropagation();
           }}
@@ -15,7 +16,7 @@ export default function StationMenu(station: any) {
           <MdOutlineMoreVert size={18} />
         </ActionIcon>
       }
-      style={{ marginRight: -8, marginTop: -4 }}
+      //
       withinPortal={false}
     >
       <Menu.Item

@@ -65,9 +65,10 @@ export default function Station({
 
   return (
     <Card
-      p="sm"
+      px={0}
       radius={0}
       sx={theme => ({
+        overflow: "visible",
         borderBottomWidth: 1,
         borderBottomStyle: "solid",
         borderBottomColor:

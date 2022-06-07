@@ -58,6 +58,8 @@ export default function DefaultLayout({
           <Group sx={{ height: "100%" }} position="apart">
             <ActionIcon
               variant="transparent"
+              size={24}
+              sx={{ marginLeft: -4 }}
               onClick={() => {
                 setOpened(!opened);
               }}
@@ -67,7 +69,11 @@ export default function DefaultLayout({
             <Title style={{ fontSize: 20 }}>Radio Islam Indonesia</Title>
             <Menu
               control={
-                <ActionIcon variant="transparent">
+                <ActionIcon
+                  variant="transparent"
+                  size={24}
+                  sx={{ marginRight: -2 }}
+                >
                   <MdOutlineMoreVert size={24} />
                 </ActionIcon>
               }
@@ -100,7 +106,7 @@ export default function DefaultLayout({
         </Container>
       </Header>
       <Space h={opened ? 104 : 58} />
-      <Container p={0}>{children}</Container>
+      <Container>{children}</Container>
     </div>
   );
 }
