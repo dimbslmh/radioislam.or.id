@@ -43,7 +43,12 @@ function App(props: AppProps & { colorScheme: ColorScheme }) {
           href="https://fonts.cdnfonts.com/css/google-sans"
           rel="stylesheet"
         />
-        <meta name="theme-color" content="#fff" />
+        <meta name="theme-color" content="#c0102b" />
+        <meta
+          name="theme-color"
+          content="#860b1e"
+          media="(prefers-color-scheme: dark)"
+        ></meta>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
