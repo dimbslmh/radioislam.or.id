@@ -48,7 +48,7 @@ export function StationsPage() {
   const [state, setState] = useSetState({ stream: undefined });
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
-  const [debounced] = useDebouncedValue(search, 200);
+  const [debounced] = useDebouncedValue(search, 50);
   const [sortedData, setSortedData] = useState([]);
   const [sortBy, setSortBy] = useState<keyof any>("");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
