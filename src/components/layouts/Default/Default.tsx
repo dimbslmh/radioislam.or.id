@@ -47,11 +47,13 @@ export default function DefaultLayout({
         height={opened ? 104 : 58}
         sx={theme => ({
           borderBottom: "none",
-          color: colorScheme === "dark" ? theme.white : theme.black,
+          color: theme.white,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor:
-            colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+            theme.colorScheme === "dark"
+              ? theme.colors.brand[8]
+              : theme.colors.brand[6],
         })}
       >
         <Container style={{ height: 58 }}>
@@ -59,7 +61,7 @@ export default function DefaultLayout({
             <ActionIcon
               variant="transparent"
               size={24}
-              sx={{ marginLeft: -4 }}
+              sx={{ marginLeft: -4, color: "#fff" }}
               onClick={() => {
                 setOpened(!opened);
               }}
@@ -72,7 +74,7 @@ export default function DefaultLayout({
                 <ActionIcon
                   variant="transparent"
                   size={24}
-                  sx={{ marginRight: -2 }}
+                  sx={{ marginRight: -2, color: "#fff" }}
                 >
                   <MdOutlineMoreVert size={24} />
                 </ActionIcon>
@@ -93,6 +95,7 @@ export default function DefaultLayout({
             <Group grow={true}>
               <TextInput
                 autoFocus
+                variant="default"
                 value={query}
                 onChange={event => {
                   const { value } = event.currentTarget;
