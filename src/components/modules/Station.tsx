@@ -80,7 +80,12 @@ export default function Station({
       })}
       onClick={handlePlay}
     >
-      <Group noWrap={true} align="flex-start" sx={{ height: "100%" }}>
+      <Group
+        noWrap={true}
+        spacing={0}
+        align="flex-start"
+        sx={{ height: "100%" }}
+      >
         <Indicator
           inline
           disabled={!props.live}
@@ -122,7 +127,7 @@ export default function Station({
         <Stack
           justify="space-between"
           spacing={0}
-          sx={{ height: "100%", width: "100%" }}
+          sx={{ height: "100%", width: "100%", marginLeft: 16 }}
         >
           <Group position="apart">
             <Text style={{ fontSize: 13 }} color="dimmed">
