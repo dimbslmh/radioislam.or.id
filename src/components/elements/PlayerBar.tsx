@@ -36,10 +36,6 @@ export default function PlayerBar({
 
   const { colorScheme } = useMantineColorScheme();
 
-  const metadata = [state.artist, state.title]
-    .filter(string => !!string)
-    .join(" - ");
-
   return (
     <Group style={{ height: 58 }} noWrap spacing={8}>
       <Avatar src={state.logo} size={42}>
@@ -64,7 +60,7 @@ export default function PlayerBar({
             opacity: playMarquee ? 0 : 1,
           }}
         >
-          {metadata}
+          {state.songtitle}
         </Text>
         {playMarquee && (
           <Marquee
@@ -93,7 +89,7 @@ export default function PlayerBar({
                 paddingRight: 100,
               }}
             >
-              {metadata}
+              {state.songtitle}
             </Text>
           </Marquee>
         )}
