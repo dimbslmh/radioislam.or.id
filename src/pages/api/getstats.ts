@@ -28,6 +28,7 @@ export default async function handler(
         listeners: 0,
         streamstatus: 0,
         live: false,
+        onair: false,
       };
       if (req.body.type === "ic") {
         json.listeners = 0;
@@ -39,10 +40,14 @@ export default async function handler(
         const songtitle = results.data.songtitle.split(" - ");
         json.title = songtitle[1];
         json.artist = songtitle[0].replace("LIVE", "").trim();
-        json.songtitle = results.data.songtitle.replace("LIVE", "").trim();
+        json.songtitle = results.data.songtitle
+          .replace("LIVE", "")
+          .replace("ONAIR", "")
+          .trim();
         json.listeners = results.data.currentlisteners;
         json.streamstatus = results.data.streamstatus;
         json.live = results.data.songtitle.startsWith("LIVE");
+        json.onair = results.data.songtitle.startsWith("ONAIR");
       }
       return res.status(200).json(json);
     })

@@ -45,7 +45,7 @@ export default function Station({
     },
   );
 
-  if (!data || data?.error || !data.streamstatus) {
+  if (!data || data?.error || !data.streamstatus || data.live) {
     return null;
   }
 
@@ -88,7 +88,7 @@ export default function Station({
       >
         <Indicator
           inline
-          disabled={!props.live}
+          disabled={!data.onair}
           label="LIVE"
           radius={6}
           position="bottom-center"
@@ -108,7 +108,7 @@ export default function Station({
             src={props.logo}
             size={64}
             sx={theme => ({
-              ...(props.live && {
+              ...(data.onair && {
                 boxShadow: `0 0 0 2px ${
                   theme.colorScheme === "dark"
                     ? theme.colors.dark[7]
