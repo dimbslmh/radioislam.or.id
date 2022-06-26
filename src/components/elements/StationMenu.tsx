@@ -26,6 +26,7 @@ export default function StationMenu(station: any) {
             console.log("navigator.canShare() not supported.");
           } else {
             const shareData = {
+              title: "Share",
               text: `📣 📣
               Yuk simak kajian:
               ${station.songtitle}
