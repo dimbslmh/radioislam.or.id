@@ -4,6 +4,7 @@ import {
   MdDarkMode,
   MdLightMode,
   MdOutlineMoreVert,
+  MdRefresh,
   MdSearch
 } from "react-icons/md";
 
@@ -24,12 +25,14 @@ import useStyles from "./Default.styles";
 interface Props {
   title?: string;
   handleSearchChange: any;
+  handleRefresh: any;
 }
 
 export default function DefaultLayout({
   title,
   children,
   handleSearchChange,
+  handleRefresh,
 }: PropsWithChildren<Props>) {
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -58,38 +61,58 @@ export default function DefaultLayout({
       >
         <Container style={{ height: 58 }}>
           <Group sx={{ height: "100%" }} position="apart">
-            <ActionIcon
-              variant="transparent"
-              size={24}
-              sx={{ marginLeft: -4, color: "#fff" }}
-              onClick={() => {
-                setOpened(!opened);
+            <Group
+              sx={{
+                flexGrow: 1,
+                flexBasis: 0,
+                justifyContent: "flex-start",
               }}
             >
-              <MdSearch size={24} />
-            </ActionIcon>
-            <Title style={{ fontSize: 20 }}>Radio Islam Indonesia</Title>
-            <Menu
-              control={
-                <ActionIcon
-                  variant="transparent"
-                  size={24}
-                  sx={{ marginRight: -2, color: "#fff" }}
-                >
-                  <MdOutlineMoreVert size={24} />
-                </ActionIcon>
-              }
-              closeOnItemClick={false}
-              withinPortal={false}
-              sx={{ marginRight: -8 }}
-            >
-              <Menu.Item
-                icon={colorScheme === "dark" ? <MdLightMode /> : <MdDarkMode />}
-                onClick={() => toggleColorScheme()}
+              <ActionIcon
+                size={36}
+                radius={18}
+                sx={{
+                  marginLeft: -4,
+                  color: "#fff",
+                }}
+                onClick={() => {
+                  setOpened(!opened);
+                }}
               >
-                Theme
-              </Menu.Item>
-            </Menu>
+                <MdSearch size={24} />
+              </ActionIcon>
+            </Group>
+
+            <Title style={{ fontSize: 20 }}>Radio Islam Indonesia</Title>
+            <Group
+              sx={{ flexGrow: 1, flexBasis: 0, justifyContent: "flex-end" }}
+            >
+              <Menu
+                control={
+                  <ActionIcon
+                    size={36}
+                    radius={18}
+                    sx={{ marginRight: -2, color: "#fff" }}
+                  >
+                    <MdOutlineMoreVert size={24} />
+                  </ActionIcon>
+                }
+                withinPortal={false}
+                sx={{ marginRight: -8 }}
+              >
+                <Menu.Item
+                  icon={
+                    colorScheme === "dark" ? <MdLightMode /> : <MdDarkMode />
+                  }
+                  onClick={() => toggleColorScheme()}
+                >
+                  Theme
+                </Menu.Item>
+                <Menu.Item icon={<MdRefresh />} onClick={() => handleRefresh()}>
+                  Refresh
+                </Menu.Item>
+              </Menu>
+            </Group>
           </Group>
           {opened && (
             <Group grow={true}>

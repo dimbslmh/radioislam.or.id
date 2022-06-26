@@ -56,7 +56,7 @@ export function StationsPage() {
   const [sortedData, setSortedData] = useState([]);
   const [sortBy, setSortBy] = useState<keyof any>("");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const { data } = GetStations();
+  const { data, refetch } = GetStations();
 
   useDidUpdate(() => {
     const result = sortData(data, {
@@ -142,7 +142,10 @@ export function StationsPage() {
   }
 
   return (
-    <DefaultLayout handleSearchChange={handleSearchChange}>
+    <DefaultLayout
+      handleSearchChange={handleSearchChange}
+      handleRefresh={refetch}
+    >
       {/* <Title order={4}>Urutkan</Title>
       <Stack>
         <Button
