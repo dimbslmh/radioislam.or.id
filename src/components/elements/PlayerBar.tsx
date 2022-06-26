@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import ReactAudioPlayer from "react-audio-player";
 import Marquee from "react-fast-marquee";
 import { MdPlayArrow, MdStop } from "react-icons/md";
 
@@ -8,7 +7,6 @@ import {
   Avatar,
   Group,
   Image,
-  Loader,
   Text,
   useMantineColorScheme
 } from "@mantine/core";
