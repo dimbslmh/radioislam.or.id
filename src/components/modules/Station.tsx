@@ -169,7 +169,7 @@ export default function Station({
             <Text style={{ fontSize: 13 }} color="dimmed">
               {props.name}
             </Text>
-            <StationMenu {...data} />
+            <StationMenu {...props} {...data} />
           </Group>
 
           <Metadata {...data} />

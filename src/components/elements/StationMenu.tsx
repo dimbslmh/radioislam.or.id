@@ -20,14 +20,16 @@ export default function StationMenu(station: any) {
       withinPortal={false}
     >
       <Menu.Item
-        onClick={async () => {
+        onClick={async (event: any) => {
+          event.stopPropagation();
           if (!navigator.canShare) {
             console.log("navigator.canShare() not supported.");
           } else {
             const shareData = {
-              title: "MDN",
-              text: "Learn web development on MDN!",
-              url: "https://developer.mozilla.org",
+              text: `📣 📣
+              Yuk simak kajian:
+              ${station.songtitle}
+              di 📻 ${station.name}`,
             };
             await navigator.share(shareData);
             console.log("navigator.canShare() supported.");
