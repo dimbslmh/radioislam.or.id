@@ -27,7 +27,7 @@ export default function StationMenu(station: any) {
           } else {
             const shareData = {
               title: "Share",
-              text: `📣 📣\nYuk simak kajian:\n${station.songtitle}\ndi 📻 ${station.name}`,
+              text: `📣 📣\nYuk simak kajian:\n*${station.songtitle}*\ndi 📻 *${station.name}*`,
             };
             await navigator.share(shareData);
             console.log("navigator.canShare() supported.");
