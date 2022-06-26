@@ -109,7 +109,7 @@ export default function DefaultLayout({
         </Container>
       </Header>
       <Space h={opened ? 104 : 58} />
-      <Container>{children}</Container>
+      <Container px={0}>{children}</Container>
     </div>
   );
 }

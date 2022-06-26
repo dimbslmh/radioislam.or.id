@@ -1,17 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { useAudioPlayer } from "react-use-audio-player";
+import { useEffect, useRef, useState } from "react";
 
 import PlayerBar from "@element/PlayerBar";
 import DefaultLayout from "@layout/Default/Default";
-import {
-  Button,
-  Container,
-  Drawer,
-  SimpleGrid,
-  Space,
-  Stack,
-  Title
-} from "@mantine/core";
+import { Container, Drawer, SimpleGrid, Space } from "@mantine/core";
 import { useDebouncedValue, useDidUpdate, useSetState } from "@mantine/hooks";
 import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
@@ -45,8 +36,21 @@ function sortData(
 }
 
 export function StationsPage() {
-  const [state, setState] = useSetState({ stream: undefined });
+  const [state, setState] = useSetState({
+    songtitle: "",
+    name: "",
+    logo: "",
+    audioSrc: "",
+  });
+
+  const audioRef = useRef<HTMLAudioElement | undefined>(
+    typeof Audio !== "undefined" ? new Audio("") : undefined,
+  );
+  const isReady = useRef(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const [opened, setOpened] = useState(false);
+
   const [search, setSearch] = useState("");
   const [debounced] = useDebouncedValue(search, 50);
   const [sortedData, setSortedData] = useState([]);
@@ -75,24 +79,50 @@ export function StationsPage() {
     setSearch(value);
   };
 
-  // const { play, stop, playing, player, load, loading } = useAudioPlayer({
-  //   src: state.stream,
-  //   html5: true,
-  //   format: ["mp3", "aac"],
-  // });
-
   useEffect(() => {
     if (data) {
       setSortedData(data);
     }
   }, [data]);
 
-  useDidUpdate(() => {
-    if (state) {
-      console.log("PLAY!");
-      // play();
+  useEffect(() => {
+    // Pause and clean up on unmount
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = new Audio("");
+    };
+  }, []);
+
+  // Handle setup when changing tracks
+  useEffect(() => {
+    audioRef.current?.pause();
+    audioRef.current = new Audio("");
+    audioRef.current = new Audio(state.audioSrc);
+
+    if (isReady.current) {
+      audioRef.current.play();
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: state.songtitle,
+        artist: state.name,
+      });
+      setIsPlaying(true);
+      setOpened(true);
+    } else {
+      // Set the isReady ref as true for the next pass
+      isReady.current = true;
     }
   }, [state]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current?.play();
+    } else {
+      audioRef.current?.pause();
+      audioRef.current = new Audio("");
+      audioRef.current = new Audio(state.audioSrc);
+      setOpened(false);
+    }
+  }, [isPlaying]);
 
   const items = sortedData.map((item: any, index: number) => (
     <Station
@@ -102,11 +132,8 @@ export function StationsPage() {
       state={state}
       setState={setState}
       setOpened={setOpened}
-      // player={player}
-      // play={play}
-      // stop={stop}
-      // playing={playing}
-      // load={load}
+      isPlaying={isPlaying}
+      setIsPlaying={setIsPlaying}
     />
   ));
 
@@ -159,10 +186,8 @@ export function StationsPage() {
           <PlayerBar
             state={state}
             setOpened={setOpened}
-            // play={play}
-            // stop={stop}
-            // playing={playing}
-            // loading={loading}
+            isPlaying={isPlaying}
+            onPlayPauseClick={setIsPlaying}
           />
         </Container>
       </Drawer>

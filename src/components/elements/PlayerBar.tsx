@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 import Marquee from "react-fast-marquee";
 import { MdPlayArrow, MdStop } from "react-icons/md";
-import { useAudioPlayer } from "react-use-audio-player";
 
 import {
   ActionIcon,
@@ -13,13 +13,7 @@ import {
   useMantineColorScheme
 } from "@mantine/core";
 
-export default function PlayerBar({
-  state,
-  stop,
-  play,
-  playing,
-  loading,
-}: any) {
+export default function PlayerBar({ state, isPlaying, onPlayPauseClick }: any) {
   const [playMarquee, setPlayMarquee] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -99,10 +93,10 @@ export default function PlayerBar({
       ) : ( */}
       <ActionIcon
         variant="transparent"
-        onClick={() => (playing ? stop() : play())}
+        onClick={() => onPlayPauseClick(!isPlaying)}
         sx={{ marginRight: -3 }}
       >
-        {playing ? <MdStop size={24} /> : <MdPlayArrow size={24} />}
+        {isPlaying ? <MdStop size={24} /> : <MdPlayArrow size={24} />}
       </ActionIcon>
       {/* )} */}
     </Group>

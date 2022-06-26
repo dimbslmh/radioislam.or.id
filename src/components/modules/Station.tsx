@@ -19,15 +19,12 @@ export default function Station({
   state,
   setState,
   setOpened,
-  play,
-  stop,
-  playing,
-  player,
-  load,
+  isPlaying,
+  setIsPlaying,
   ...props
 }: any) {
   const url = props.url.includes("/radio")
-    ? `https://${props.url}${props.port}/`
+    ? `https://${props.url}${props.port}`
     : `https://${props.url}:${props.port}`;
 
   const { data } = useQuery<any, any>(
@@ -45,27 +42,66 @@ export default function Station({
     },
   );
 
-  if (!data || data?.error || !data.streamstatus || data.live) {
+  if (!data) {
+    return (
+      <Card
+        px={0}
+        mx="md"
+        radius={0}
+        sx={theme => ({
+          overflow: "visible",
+          borderBottomWidth: 1,
+          borderBottomStyle: "solid",
+          borderBottomColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[8]
+              : theme.colors.dark[0],
+          backgroundColor:
+            theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+        })}
+      >
+        <Group
+          noWrap={true}
+          spacing={0}
+          align="flex-start"
+          sx={{ height: "100%" }}
+        >
+          <Avatar src={props.logo} size={64}>
+            <Image src="https://apiapk.radioislam.or.id/v2/logo/rii.png" />
+          </Avatar>
+          <Stack
+            justify="space-between"
+            spacing={0}
+            sx={{ height: "100%", width: "100%", marginLeft: 16 }}
+          >
+            <Group position="apart">
+              <Text style={{ fontSize: 13 }} color="dimmed">
+                {props.name}
+              </Text>
+            </Group>
+          </Stack>
+        </Group>
+      </Card>
+    );
+  }
+
+  if (data?.error || !data.streamstatus || data.live) {
     return null;
   }
 
   const handlePlay = () => {
-    const stream = url + "/stream";
-    // if (state.stream === stream) {
-    //   if (playing) {
-    //     stop();
-    //   } else {
-    //     play();
-    //   }
-    // } else {
-    setState({ stream, ...props, ...data });
-    setOpened(true);
-    // }
+    const audioSrc = url + "/stream";
+    if (isPlaying && state.audioSrc === audioSrc) {
+      setIsPlaying(false);
+    } else {
+      setState({ audioSrc, ...props, ...data });
+    }
   };
 
   return (
     <Card
       px={0}
+      mx="md"
       radius={0}
       sx={theme => ({
         overflow: "visible",
