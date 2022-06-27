@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { BsSortDown, BsSortDownAlt, BsSortUp } from "react-icons/bs";
 import { MdSort } from "react-icons/md";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import PlayerBar from "@element/PlayerBar";
 import DefaultLayout from "@layout/Default/Default";
@@ -9,6 +10,7 @@ import {
   Container,
   Drawer,
   Group,
+  Loader,
   Menu,
   Select,
   SimpleGrid,
@@ -148,6 +150,37 @@ export function StationsPage() {
     }
   }, [isPlaying]);
 
+  const limit = 10;
+
+  const [count, setCount] = useState({
+    prev: 0,
+    next: limit,
+  });
+  const [hasMore, setHasMore] = useState(true);
+  const [current, setCurrent] = useState([]);
+
+  useDidUpdate(() => {
+    if (data) {
+      setCurrent(data.slice(count.prev, count.next));
+    }
+  }, [data]);
+
+  const getMoreData = () => {
+    if (current.length === data.length) {
+      setHasMore(false);
+      return;
+    }
+    setTimeout(() => {
+      setCurrent(
+        current.concat(data.slice(count.prev + limit, count.next + limit)),
+      );
+    }, 2000);
+    setCount(prevState => ({
+      prev: prevState.prev + limit,
+      next: prevState.next + limit,
+    }));
+  };
+
   const items = sortedData.map((item: any, index: number) => (
     <Station
       key={index}
@@ -223,91 +256,40 @@ export function StationsPage() {
         />
       </Group>
 
-      {/* <Menu
-        control={
-          <ActionIcon variant="outline">
-            <MdSort size={18} />
-          </ActionIcon>
+      <InfiniteScroll
+        dataLength={current.length}
+        next={getMoreData}
+        hasMore={hasMore}
+        loader={
+          <Group position="center" my="xl">
+            <Loader />
+          </Group>
         }
-        //
-        withinPortal={false}
       >
-        <Menu.Item
-          rightSection={
-            "name" === sortBy ? (
-              reverseSortDirection ? (
-                <BsSortDown />
-              ) : (
-                <BsSortUp />
-              )
-            ) : (
-              false
-            )
-          }
-          onClick={() => setSorting("name")}
+        <SimpleGrid
+          cols={2}
+          spacing={1}
+          breakpoints={[{ maxWidth: "sm", cols: 1 }]}
         >
-          Nama
-        </Menu.Item>
-        <Menu.Item
-          rightSection={
-            "province" === sortBy ? (
-              reverseSortDirection ? (
-                <BsSortDown />
-              ) : (
-                <BsSortUp />
-              )
-            ) : (
-              false
-            )
-          }
-          onClick={() => setSorting("province")}
-        >
-          Propinsi
-        </Menu.Item>
-        <Menu.Item
-          rightSection={
-            "district" === sortBy ? (
-              reverseSortDirection ? (
-                <BsSortDown />
-              ) : (
-                <BsSortUp />
-              )
-            ) : (
-              false
-            )
-          }
-          onClick={() => setSorting("district")}
-        >
-          Kabupaten
-        </Menu.Item>
-      </Menu> */}
-      {/* <Stack>
-        <Button
-          onClick={() => setSorting("name")}
-          variant={sortBy === "name" ? "filled" : "outline"}
-        >
-          Nama
-        </Button>
-        <Button
-          onClick={() => setSorting("province")}
-          variant={sortBy === "province" ? "filled" : "outline"}
-        >
-          Propinsi
-        </Button>
-        <Button
-          onClick={() => setSorting("district")}
-          variant={sortBy === "district" ? "filled" : "outline"}
-        >
-          Kabupaten
-        </Button>
-      </Stack> */}
-      <SimpleGrid
-        cols={2}
-        spacing={1}
-        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
-      >
-        {items}
-      </SimpleGrid>
+          {/* {items} */}
+          {current &&
+            current.map((item: any, index) => (
+              <Station
+                key={index}
+                {...item}
+                index={index}
+                state={state}
+                setState={setState}
+                sortedData={sortedData}
+                setSortedData={setSortedData}
+                setOpened={setOpened}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                showOffline={showOffline}
+              />
+            ))}
+        </SimpleGrid>
+      </InfiniteScroll>
       <Space h={78} />
       <Drawer
         opened={opened}
