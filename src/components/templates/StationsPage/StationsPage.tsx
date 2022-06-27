@@ -23,11 +23,15 @@ import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
 
 function filterData(data: any, search: string) {
-  const keys = Object.keys(data[0]);
-  const query = search.toLowerCase().trim();
-  return data.filter((item: any) =>
-    keys.some(key => item[key].toString().includes(query)),
-  );
+  if (data && data.length > 0) {
+    const keys = Object.keys(data[0]);
+    const query = search.toLowerCase().trim();
+    return data.filter((item: any) =>
+      keys.some(key => item[key].toString().includes(query)),
+    );
+  } else {
+    return [];
+  }
 }
 
 function sortData(
@@ -81,7 +85,7 @@ export function StationsPage() {
   const isReady = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [showOffline, setShowOffline] = useState(true);
+  // const [showOffline, setShowOffline] = useState(true);
   const [opened, setOpened] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -177,7 +181,7 @@ export function StationsPage() {
     }
   }, [data]);
 
-  useDidUpdate(() => {
+  useEffect(() => {
     if (sortedData) {
       setCurrent(sortedData.slice(count.prev, count.next));
     }
@@ -216,7 +220,7 @@ export function StationsPage() {
       setOpened={setOpened}
       isPlaying={isPlaying}
       setIsPlaying={setIsPlaying}
-      showOffline={showOffline}
+      // showOffline={showOffline}
     />
   ));
 
@@ -255,8 +259,8 @@ export function StationsPage() {
       handleSearchChange={handleSearchChange}
       handleRefresh={refetch}
     >
-      <Group mx="md" my="sm" noWrap={true}>
-        <Select
+      {/* <Group mx="md" my="sm" noWrap={true}> */}
+      {/* <Select
           sx={{ width: 150 }}
           itemComponent={SelectItem}
           value={sortBy}
@@ -271,13 +275,13 @@ export function StationsPage() {
             { value: "district", label: "Kabupaten" },
             { value: "listeners", label: "Pendengar" },
           ]}
-        />
-        <Switch
+        /> */}
+      {/* <Switch
           checked={showOffline}
           onChange={event => setShowOffline(event.currentTarget.checked)}
           label="Tampilkan offline"
-        />
-      </Group>
+        /> */}
+      {/* </Group> */}
 
       <InfiniteScroll
         dataLength={current.length}
@@ -310,7 +314,7 @@ export function StationsPage() {
                 setOpened={setOpened}
                 isPlaying={isPlaying}
                 setIsPlaying={setIsPlaying}
-                showOffline={showOffline}
+                // showOffline={showOffline}
               />
             ))}
         </SimpleGrid>

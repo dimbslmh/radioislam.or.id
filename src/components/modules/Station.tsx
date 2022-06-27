@@ -25,7 +25,7 @@ export default function Station({
   setOpened,
   isPlaying,
   setIsPlaying,
-  showOffline,
+  // showOffline,
   ...props
 }: any) {
   const url = props.url.includes("/radio")
@@ -100,7 +100,11 @@ export default function Station({
   //   );
   // }
 
-  if (!showOffline && data && (data.error || !data.streamstatus || data.live)) {
+  // if (!showOffline && data && (data.error || !data.streamstatus || data.live)) {
+  //   return null;
+  // }
+
+  if (data && (data.error || !data.streamstatus || data.live)) {
     return null;
   }
 
