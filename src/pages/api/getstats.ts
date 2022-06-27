@@ -13,23 +13,24 @@ export default async function handler(
 
   const url = req.body.url;
 
+  const json = {
+    title: "",
+    artist: "",
+    songtitle: "",
+    listeners: 0,
+    streamstatus: 0,
+    live: false,
+    onair: false,
+  };
+
   return axios
     .get(`${url}${path}`, {
-      timeout: 5000,
+      timeout: 3000,
       httpsAgent: new https.Agent({
         rejectUnauthorized: false,
       }),
     })
     .then(results => {
-      const json = {
-        title: "",
-        artist: "",
-        songtitle: "",
-        listeners: 0,
-        streamstatus: 0,
-        live: false,
-        onair: false,
-      };
       if (req.body.type === "ic") {
         json.listeners = 0;
       } else {
@@ -44,7 +45,7 @@ export default async function handler(
           .replace("LIVE", "")
           .replace("ONAIR", "")
           .trim();
-        json.listeners = results.data.currentlisteners;
+        json.listeners = results.data.currentlisteners || 0;
         json.streamstatus = results.data.streamstatus;
         json.live = results.data.songtitle.startsWith("LIVE");
         json.onair = results.data.songtitle.startsWith("ONAIR");
@@ -52,6 +53,8 @@ export default async function handler(
       return res.status(200).json(json);
     })
     .catch(error => {
-      return res.status(200).json({ error: { message: error.message } });
+      return res
+        .status(200)
+        .json({ ...json, error: { message: error.message } });
     });
 }

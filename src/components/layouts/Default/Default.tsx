@@ -71,9 +71,9 @@ export default function DefaultLayout({
               <ActionIcon
                 size={36}
                 radius={18}
+                className={classes.actionButton}
                 sx={{
                   marginLeft: -4,
-                  color: "#fff",
                 }}
                 onClick={() => {
                   setOpened(!opened);
@@ -92,7 +92,8 @@ export default function DefaultLayout({
                   <ActionIcon
                     size={36}
                     radius={18}
-                    sx={{ marginRight: -2, color: "#fff" }}
+                    className={classes.actionButton}
+                    sx={{ marginRight: -2 }}
                   >
                     <MdOutlineMoreVert size={24} />
                   </ActionIcon>

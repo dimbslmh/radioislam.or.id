@@ -2,10 +2,19 @@ import { Stack, Text } from "@mantine/core";
 
 export default function Metadata({
   songtitle,
+  streamstatus,
 }: {
   songtitle: string;
   streamstatus: number;
 }) {
+  if (!streamstatus) {
+    return (
+      <Text weight={500} size="sm">
+        Offline
+      </Text>
+    );
+  }
+
   return (
     <Stack spacing={0}>
       <Text

@@ -1,8 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { BsSortDown, BsSortDownAlt, BsSortUp } from "react-icons/bs";
+import { MdSort } from "react-icons/md";
 
 import PlayerBar from "@element/PlayerBar";
 import DefaultLayout from "@layout/Default/Default";
-import { Container, Drawer, SimpleGrid, Space } from "@mantine/core";
+import {
+  ActionIcon,
+  Container,
+  Drawer,
+  Group,
+  Menu,
+  Select,
+  SimpleGrid,
+  Space,
+  Switch,
+  Text
+} from "@mantine/core";
 import { useDebouncedValue, useDidUpdate, useSetState } from "@mantine/hooks";
 import Station from "@module/Station";
 import { GetStations } from "@service/react-query/queries/stations";
@@ -25,11 +38,21 @@ function sortData(
 
   return filterData(
     [...data].sort((a, b) => {
+      if (a.sticky || b.sticky) return 1;
+
       if (payload.reversed) {
-        return b[payload.sortBy].localeCompare(a[payload.sortBy]);
+        if (isNaN(a[payload.sortBy]) && isNaN(b[payload.sortBy])) {
+          return b[payload.sortBy].localeCompare(a[payload.sortBy]);
+        } else {
+          return b[payload.sortBy] - a[payload.sortBy];
+        }
       }
 
-      return a[payload.sortBy].localeCompare(b[payload.sortBy]);
+      if (isNaN(a[payload.sortBy]) && isNaN(b[payload.sortBy])) {
+        return a[payload.sortBy].localeCompare(b[payload.sortBy]);
+      } else {
+        return a[payload.sortBy] - b[payload.sortBy];
+      }
     }),
     payload.search,
   );
@@ -49,17 +72,18 @@ export function StationsPage() {
   const isReady = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [showOffline, setShowOffline] = useState(true);
   const [opened, setOpened] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debounced] = useDebouncedValue(search, 50);
   const [sortedData, setSortedData] = useState([]);
-  const [sortBy, setSortBy] = useState<keyof any>("");
+  const [sortBy, setSortBy] = useState<keyof any & string>("name");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const { data, refetch } = GetStations();
 
   useDidUpdate(() => {
-    const result = sortData(data, {
+    const result = sortData(sortedData, {
       sortBy,
       reversed: reverseSortDirection,
       search: debounced,
@@ -67,11 +91,11 @@ export function StationsPage() {
     setSortedData(result);
   }, [debounced]);
 
-  const setSorting = (field: keyof any) => {
+  const setSorting = (field: keyof any & string) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    const result = sortData(data, { sortBy: field, reversed, search });
+    const result = sortData(sortedData, { sortBy: field, reversed, search });
     setSortedData(result);
   };
 
@@ -131,9 +155,12 @@ export function StationsPage() {
       index={index}
       state={state}
       setState={setState}
+      sortedData={sortedData}
+      setSortedData={setSortedData}
       setOpened={setOpened}
       isPlaying={isPlaying}
       setIsPlaying={setIsPlaying}
+      showOffline={showOffline}
     />
   ));
 
@@ -141,13 +168,120 @@ export function StationsPage() {
     return <></>;
   }
 
+  interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
+    label: string;
+    value: string;
+  }
+
+  const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
+    ({ label, value, ...others }: ItemProps, ref) => {
+      return (
+        <div ref={ref} {...others}>
+          <Group noWrap position="apart">
+            <Text size="sm">{label}</Text>
+            {value === sortBy ? (
+              reverseSortDirection ? (
+                <BsSortDownAlt />
+              ) : (
+                <BsSortDown />
+              )
+            ) : (
+              <BsSortDown />
+            )}
+          </Group>
+        </div>
+      );
+    },
+  );
+
   return (
     <DefaultLayout
       handleSearchChange={handleSearchChange}
       handleRefresh={refetch}
     >
-      {/* <Title order={4}>Urutkan</Title>
-      <Stack>
+      <Group mx="md" my="sm" noWrap={true}>
+        <Select
+          sx={{ width: 150 }}
+          itemComponent={SelectItem}
+          value={sortBy}
+          withinPortal={false}
+          rightSection={
+            reverseSortDirection ? <BsSortDown /> : <BsSortDownAlt />
+          }
+          onChange={value => setSorting(value!)}
+          data={[
+            { value: "name", label: "Nama" },
+            { value: "province", label: "Propinsi" },
+            { value: "district", label: "Kabupaten" },
+            { value: "listeners", label: "Pendengar" },
+          ]}
+        />
+        <Switch
+          checked={showOffline}
+          onChange={event => setShowOffline(event.currentTarget.checked)}
+          label="Tampilkan offline"
+        />
+      </Group>
+
+      {/* <Menu
+        control={
+          <ActionIcon variant="outline">
+            <MdSort size={18} />
+          </ActionIcon>
+        }
+        //
+        withinPortal={false}
+      >
+        <Menu.Item
+          rightSection={
+            "name" === sortBy ? (
+              reverseSortDirection ? (
+                <BsSortDown />
+              ) : (
+                <BsSortUp />
+              )
+            ) : (
+              false
+            )
+          }
+          onClick={() => setSorting("name")}
+        >
+          Nama
+        </Menu.Item>
+        <Menu.Item
+          rightSection={
+            "province" === sortBy ? (
+              reverseSortDirection ? (
+                <BsSortDown />
+              ) : (
+                <BsSortUp />
+              )
+            ) : (
+              false
+            )
+          }
+          onClick={() => setSorting("province")}
+        >
+          Propinsi
+        </Menu.Item>
+        <Menu.Item
+          rightSection={
+            "district" === sortBy ? (
+              reverseSortDirection ? (
+                <BsSortDown />
+              ) : (
+                <BsSortUp />
+              )
+            ) : (
+              false
+            )
+          }
+          onClick={() => setSorting("district")}
+        >
+          Kabupaten
+        </Menu.Item>
+      </Menu> */}
+      {/* <Stack>
         <Button
           onClick={() => setSorting("name")}
           variant={sortBy === "name" ? "filled" : "outline"}
