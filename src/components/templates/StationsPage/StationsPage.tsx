@@ -160,19 +160,21 @@ export function StationsPage() {
   const [current, setCurrent] = useState([]);
 
   useDidUpdate(() => {
-    if (data) {
-      setCurrent(data.slice(count.prev, count.next));
+    if (sortedData) {
+      setCurrent(sortedData.slice(count.prev, count.next));
     }
-  }, [data]);
+  }, [sortedData]);
 
   const getMoreData = () => {
-    if (current.length === data.length) {
+    if (current.length === sortedData.length) {
       setHasMore(false);
       return;
     }
     setTimeout(() => {
       setCurrent(
-        current.concat(data.slice(count.prev + limit, count.next + limit)),
+        current.concat(
+          sortedData.slice(count.prev + limit, count.next + limit),
+        ),
       );
     }, 2000);
     setCount(prevState => ({
