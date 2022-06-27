@@ -194,7 +194,13 @@ export default function Station({
             </Text>
             <StationMenu {...props} {...data} />
           </Group>
-          {isLoading ? <Loader variant="dots" /> : <Metadata {...data} />}
+          {isLoading ? (
+            <Text weight={500} size="sm">
+              Loading...
+            </Text>
+          ) : (
+            <Metadata {...data} />
+          )}
 
           <StationStats {...data} />
         </Stack>
