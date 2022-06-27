@@ -258,7 +258,7 @@ export function StationsPage() {
         />
       </Group>
 
-      <InfiniteScroll
+      {/* <InfiniteScroll
         dataLength={current.length}
         next={getMoreData}
         hasMore={hasMore}
@@ -267,14 +267,14 @@ export function StationsPage() {
             <Loader />
           </Group>
         }
+      > */}
+      <SimpleGrid
+        cols={2}
+        spacing={1}
+        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
-        <SimpleGrid
-          cols={2}
-          spacing={1}
-          breakpoints={[{ maxWidth: "sm", cols: 1 }]}
-        >
-          {/* {items} */}
-          {current &&
+        {items}
+        {/* {current &&
             current.map((item: any, index) => (
               <Station
                 key={index}
@@ -289,9 +289,9 @@ export function StationsPage() {
                 setIsPlaying={setIsPlaying}
                 showOffline={showOffline}
               />
-            ))}
-        </SimpleGrid>
-      </InfiniteScroll>
+            ))} */}
+      </SimpleGrid>
+      {/* </InfiniteScroll> */}
       <Space h={78} />
       <Drawer
         opened={opened}
