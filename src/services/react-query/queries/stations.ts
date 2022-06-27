@@ -17,7 +17,7 @@ export const GetStations = () => {
       return item.active === true;
     });
 
-    return activeStations.slice(0, 10);
+    return activeStations;
   });
 };
 
