@@ -85,7 +85,7 @@ export function StationsPage() {
   const isReady = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // const [showOffline, setShowOffline] = useState(true);
+  const [showOffline, setShowOffline] = useState(true);
   const [opened, setOpened] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -257,8 +257,8 @@ export function StationsPage() {
       handleSearchChange={handleSearchChange}
       handleRefresh={refetch}
     >
-      {/* <Group mx="md" my="sm" noWrap={true}> */}
-      {/* <Select
+      <Group mx="md" my="sm" noWrap={true}>
+        <Select
           sx={{ width: 150 }}
           itemComponent={SelectItem}
           value={sortBy}
@@ -273,13 +273,13 @@ export function StationsPage() {
             { value: "district", label: "Kabupaten" },
             { value: "listeners", label: "Pendengar" },
           ]}
-        /> */}
-      {/* <Switch
+        />
+        {/* <Switch
           checked={showOffline}
           onChange={event => setShowOffline(event.currentTarget.checked)}
           label="Tampilkan offline"
         /> */}
-      {/* </Group> */}
+      </Group>
 
       <InfiniteScroll
         dataLength={current.length}
