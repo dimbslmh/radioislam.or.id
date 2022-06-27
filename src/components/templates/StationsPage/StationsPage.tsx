@@ -174,7 +174,7 @@ export function StationsPage() {
   }
 
   const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
-    ({ label, value, ...others }: ItemProps, ref) => {
+    function SelectItemElement({ label, value, ...others }: ItemProps, ref) {
       return (
         <div ref={ref} {...others}>
           <Group noWrap position="apart">
