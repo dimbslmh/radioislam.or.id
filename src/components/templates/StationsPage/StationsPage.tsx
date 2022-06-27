@@ -96,7 +96,7 @@ export function StationsPage() {
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const { data, refetch } = GetStations();
 
-  const limit = 10;
+  const limit = 30;
 
   const [count, setCount] = useState({
     prev: 0,
