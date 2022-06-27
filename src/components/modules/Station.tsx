@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useQuery } from "react-query";
 
 import Metadata from "@element/Metadata";
-import StationHeader from "@element/StationHeader";
 import StationMenu from "@element/StationMenu";
 import StationStats from "@element/StationStats";
 import {
@@ -12,7 +11,6 @@ import {
   Group,
   Image,
   Indicator,
-  Loader,
   Stack,
   Text
 } from "@mantine/core";
