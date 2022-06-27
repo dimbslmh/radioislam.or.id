@@ -20,6 +20,8 @@ export default function Station({
   setState,
   sortedData,
   setSortedData,
+  listenersData,
+  setListenersData,
   setOpened,
   isPlaying,
   setIsPlaying,
@@ -46,17 +48,9 @@ export default function Station({
   );
 
   useEffect(() => {
-    const dataWithStats = sortedData.map((station: any) => {
-      if (station.url === props.url && station.port === props.port) {
-        return {
-          ...station,
-          ...data,
-        };
-      } else {
-        return station;
-      }
-    });
-    setSortedData(dataWithStats);
+    if (data) {
+      setListenersData({ [`${props.url}:${props.port}`]: data.listeners });
+    }
   }, [data]);
 
   // if (!data) {

@@ -33,6 +33,7 @@ function filterData(data: any, search: string) {
 function sortData(
   data: any,
   payload: { sortBy: keyof any; reversed: boolean; search: string },
+  listenersData: any,
 ) {
   if (!payload.sortBy) {
     return filterData(data, payload.search);
@@ -43,17 +44,23 @@ function sortData(
       if (a.sticky || b.sticky) return 1;
 
       if (payload.reversed) {
-        if (isNaN(a[payload.sortBy]) && isNaN(b[payload.sortBy])) {
-          return b[payload.sortBy].localeCompare(a[payload.sortBy]);
+        if (payload.sortBy === "listeners") {
+          return (
+            listenersData[`${b.url}:${b.port}`] -
+            listenersData[`${a.url}:${a.port}`]
+          );
         } else {
-          return b[payload.sortBy] - a[payload.sortBy];
+          return b[payload.sortBy].localeCompare(a[payload.sortBy]);
         }
       }
 
-      if (isNaN(a[payload.sortBy]) && isNaN(b[payload.sortBy])) {
-        return a[payload.sortBy].localeCompare(b[payload.sortBy]);
+      if (payload.sortBy === "listeners") {
+        return (
+          listenersData[`${a.url}:${a.port}`] -
+          listenersData[`${b.url}:${b.port}`]
+        );
       } else {
-        return a[payload.sortBy] - b[payload.sortBy];
+        return a[payload.sortBy].localeCompare(b[payload.sortBy]);
       }
     }),
     payload.search,
@@ -80,36 +87,50 @@ export function StationsPage() {
   const [search, setSearch] = useState("");
   const [debounced] = useDebouncedValue(search, 50);
   const [sortedData, setSortedData] = useState([]);
+  const [listenersData, setListenersData] = useSetState({});
   const [sortBy, setSortBy] = useState<keyof any & string>("name");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const { data, refetch } = GetStations();
 
+  const limit = 10;
+
+  const [count, setCount] = useState({
+    prev: 0,
+    next: limit,
+  });
+  const [hasMore, setHasMore] = useState(true);
+  const [current, setCurrent] = useState([]);
+
   useDidUpdate(() => {
-    const result = sortData(sortedData, {
-      sortBy,
-      reversed: reverseSortDirection,
-      search: debounced,
-    });
-    setSortedData(result);
+    const result = sortData(
+      current,
+      {
+        sortBy,
+        reversed: reverseSortDirection,
+        search: debounced,
+      },
+      listenersData,
+    );
+    // setSortedData(result);
+    setCurrent(result);
   }, [debounced]);
 
   const setSorting = (field: keyof any & string) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    const result = sortData(sortedData, { sortBy: field, reversed, search });
-    setSortedData(result);
+    const result = sortData(
+      current,
+      { sortBy: field, reversed, search },
+      listenersData,
+    );
+    // setSortedData(result);
+    setCurrent(result);
   };
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
   };
-
-  useEffect(() => {
-    if (data) {
-      setSortedData(data);
-    }
-  }, [data]);
 
   useEffect(() => {
     // Pause and clean up on unmount
@@ -150,14 +171,11 @@ export function StationsPage() {
     }
   }, [isPlaying]);
 
-  const limit = 10;
-
-  const [count, setCount] = useState({
-    prev: 0,
-    next: limit,
-  });
-  const [hasMore, setHasMore] = useState(true);
-  const [current, setCurrent] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   useDidUpdate(() => {
     if (sortedData) {
@@ -167,6 +185,7 @@ export function StationsPage() {
 
   const getMoreData = () => {
     if (current.length === sortedData.length) {
+      console.log({ hasMore });
       setHasMore(false);
       return;
     }
@@ -192,6 +211,8 @@ export function StationsPage() {
       setState={setState}
       sortedData={sortedData}
       setSortedData={setSortedData}
+      listenersData={listenersData}
+      setListenersData={setListenersData}
       setOpened={setOpened}
       isPlaying={isPlaying}
       setIsPlaying={setIsPlaying}
@@ -258,7 +279,7 @@ export function StationsPage() {
         />
       </Group>
 
-      {/* <InfiniteScroll
+      <InfiniteScroll
         dataLength={current.length}
         next={getMoreData}
         hasMore={hasMore}
@@ -267,14 +288,14 @@ export function StationsPage() {
             <Loader />
           </Group>
         }
-      > */}
-      <SimpleGrid
-        cols={2}
-        spacing={1}
-        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
-        {items}
-        {/* {current &&
+        <SimpleGrid
+          cols={2}
+          spacing={1}
+          breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+        >
+          {/* {items} */}
+          {current &&
             current.map((item: any, index) => (
               <Station
                 key={index}
@@ -284,14 +305,16 @@ export function StationsPage() {
                 setState={setState}
                 sortedData={sortedData}
                 setSortedData={setSortedData}
+                listenersData={listenersData}
+                setListenersData={setListenersData}
                 setOpened={setOpened}
                 isPlaying={isPlaying}
                 setIsPlaying={setIsPlaying}
                 showOffline={showOffline}
               />
-            ))} */}
-      </SimpleGrid>
-      {/* </InfiniteScroll> */}
+            ))}
+        </SimpleGrid>
+      </InfiniteScroll>
       <Space h={78} />
       <Drawer
         opened={opened}
