@@ -68,7 +68,7 @@ export default function DefaultLayout({
                 justifyContent: "flex-start",
               }}
             >
-              <ActionIcon
+              {/* <ActionIcon
                 size={36}
                 radius={18}
                 className={classes.actionButton}
@@ -80,7 +80,7 @@ export default function DefaultLayout({
                 }}
               >
                 <MdSearch size={24} />
-              </ActionIcon>
+              </ActionIcon> */}
             </Group>
 
             <Title style={{ fontSize: 20 }}>Radio Islam Indonesia</Title>

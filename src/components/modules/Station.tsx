@@ -104,7 +104,7 @@ export default function Station({
   //   return null;
   // }
 
-  if (data && (data.error || !data.streamstatus || data.live)) {
+  if (!data || data?.error || !data?.streamstatus || data?.live) {
     return null;
   }
 

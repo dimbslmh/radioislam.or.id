@@ -193,13 +193,11 @@ export function StationsPage() {
       setHasMore(false);
       return;
     }
-    setTimeout(() => {
-      setCurrent(
-        current.concat(
-          sortedData.slice(count.prev + limit, count.next + limit),
-        ),
-      );
-    }, 2000);
+    // setTimeout(() => {
+    setCurrent(
+      current.concat(sortedData.slice(count.prev + limit, count.next + limit)),
+    );
+    // }, 500);
     setCount(prevState => ({
       prev: prevState.prev + limit,
       next: prevState.next + limit,
