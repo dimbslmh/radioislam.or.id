@@ -10,7 +10,10 @@ export default function StationMenu(station: any) {
           variant="transparent"
           style={{ marginRight: -13, marginTop: -4 }}
           radius={14}
-          sx={{ "&:active": { backgroundColor: "rgba(0,0,0,0.15)" } }}
+          sx={{
+            "&:active": { backgroundColor: "rgba(0,0,0,0.15)" },
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.15)" },
+          }}
           onClick={(event: any) => {
             event.stopPropagation();
           }}

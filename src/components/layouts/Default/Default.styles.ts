@@ -6,6 +6,9 @@ export default createStyles(theme => ({
   },
   actionButton: {
     color: "#fff",
+    "&:hover": {
+      backgroundColor: "rgba(0,0,0,0.3)",
+    },
     "&:active": {
       backgroundColor: "rgba(0,0,0,0.3)",
     },
